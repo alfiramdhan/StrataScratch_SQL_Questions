@@ -21,8 +21,23 @@ GROUP BY 1
 ORDER BY 2 desc;
 ```
 
-### 📌 Airbnb | Interview Question | Number Of Bathrooms And Bedrooms
+### 📌 Airbnb | Interview Questions | Number Of Bathrooms And Bedrooms
 [Question: ](https://platform.stratascratch.com/coding/9622-number-of-bathrooms-and-bedrooms?code_type=1) Find the average number of bathrooms and bedrooms for each city’s property types. Output the result along with the city name and the property type.
+
+```sql
+SELECT city,
+        property_type,
+        AVG(bathrooms)as avg_bathroom,
+        AVG(bedrooms)as avg_bedroom
+FROM airbnb_search_details
+GROUP BY 1,2;
+```
+
+### 📌 Amazon | Interview Questions | Order Details
+[Question: ](https://platform.stratascratch.com/coding/9913-order-details?code_type=1) Find order details made by Jill and Eva.
+Consider the Jill and Eva as first names of customers.
+Output the order date, details and cost along with the first name.
+Order records based on the customer id in ascending order.
 
 ```sql
 
