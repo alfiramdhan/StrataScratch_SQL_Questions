@@ -40,8 +40,33 @@ Output the order date, details and cost along with the first name.
 Order records based on the customer id in ascending order.
 
 ```sql
+SELECT a.first_name,
+        b.order_date,
+        b.order_details,
+        b.total_order_cost
+FROM customers a
+JOIN orders b ON a.id = b.cust_id
+WHERE a.first_name IN ('Jill', 'Eva')
+ORDER BY b.cust_id ASC;
+```
 
+### 📌 Meta/Facebook | General Practice | Find all posts which were reacted to with a heart
+[Question: ](https://platform.stratascratch.com/coding/10087-find-all-posts-which-were-reacted-to-with-a-heart?code_type=1) Find all posts which were reacted to with a heart. For such posts output all columns from facebook_posts table.
 
+```sql
+SELECT DISTINCT b.*
+FROM facebook_reactions a
+JOIN facebook_posts b ON a.post_id = b.post_id
+WHERE a.reaction = 'heart';
+```
+In solution above, we need to add DISTINCT so that there is no data duplication
+
+### 📌 📌 Meta/Facebook | Interview Questions | Popularity of Hack
+[Question: ](https://platform.stratascratch.com/coding/10061-popularity-of-hack?code_type=1) Meta/Facebook has developed a new programing language called Hack.To measure the popularity of Hack they ran a survey with their employees. The survey included data on previous programing familiarity as well as the number of years of experience, age, gender and most importantly satisfaction with Hack. Due to an error location data was not collected, but your supervisor demands a report showing average popularity of Hack by office location. Luckily the user IDs of employees completing the surveys were stored.
+Based on the above, find the average popularity of the Hack per office location.
+Output the location along with the average popularity.
+
+```sql
 
 
 
