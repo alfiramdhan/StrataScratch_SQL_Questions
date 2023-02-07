@@ -130,4 +130,28 @@ GROUP BY 2
 ORDER BY 3 DESC
 ```
 
+### 📌 Airbnb | General Practice | Number Of Units Per Nationality
+[Question: ](https://platform.stratascratch.com/coding/10156-number-of-units-per-nationality?code_type=1) Find the number of apartments per nationality that are owned by people under 30 years old.
+
+Output the nationality along with the number of apartments. Sort records by the apartments count in descending order.
+
+```SQL
+SELECT nationality,
+        COUNT(DISTINCT unit_id)as number_apart
+FROM airbnb_hosts a
+JOIN airbnb_units b ON a.host_id = b.host_id
+WHERE b.unit_type = 'Apartment'
+    AND a.age < 30
+GROUP BY 1
+ORDER BY 2 DESC;
+```
+
+
+
+
+
+
+
+
+
 
