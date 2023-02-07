@@ -50,6 +50,20 @@ WHERE a.first_name IN ('Jill', 'Eva')
 ORDER BY b.cust_id ASC;
 ```
 
+### 📌 Amazon | Interview Questions | Customer Details
+[Question: ](https://platform.stratascratch.com/coding/9891-customer-details?code_type=1) Find the details of each customer regardless of whether the customer made an order. Output the customer's first name, last name, and the city along with the order details.
+You may have duplicate rows in your results due to a customer ordering several of the same items. Sort records based on the customer's first name and the order details in ascending order.
+
+```sql
+SELECT a.first_name,
+        a.last_name,
+        a.city,
+        b.order_details
+FROM customers a
+LEFT JOIN orders b ON a.id = b.cust_id
+ORDER BY 1, 4 ASC;
+```
+
 ### 📌 Meta/Facebook | General Practice | Find all posts which were reacted to with a heart
 [Question: ](https://platform.stratascratch.com/coding/10087-find-all-posts-which-were-reacted-to-with-a-heart?code_type=1) Find all posts which were reacted to with a heart. For such posts output all columns from facebook_posts table.
 
@@ -146,10 +160,39 @@ GROUP BY 1
 ORDER BY 2 DESC;
 ```
 
+### 📌 Amazon | Interview Questions | Finding User Purchases
+[Question: ](https://platform.stratascratch.com/coding/10322-finding-user-purchases?code_type=1) Write a query that'll identify returning active users. A returning active user is a user that has made a second purchase within 7 days of any other of their purchases.
 
+Output a list of user_ids of these returning active users.
 
+```SQL
+WITH cte AS(    
+    SELECT user_id,
+            created_at,
+            LEAD(created_at) OVER(PARTITION BY user_id ORDER BY created_at)as next_purchase
+    FROM amazon_transactions
+)
+    SELECT DISTINCT user_id
+    FROM cte
+    WHERE (next_purchase - created_at) <= 7
+```
 
+### 📌 Amazon | Interview Questions | Highest Cost Orders
+[Question: ](https://platform.stratascratch.com/coding/9915-highest-cost-orders?code_type=1) Find the customer with the highest daily total order cost between 2019-02-01 to 2019-05-01. If customer had more than one order on a certain day, sum the order costs on daily basis. Output customer's first name, total cost of their items, and the date.
 
+For simplicity, you can assume that every first name in the dataset is unique.
+
+```SQL
+SELECT DISTINCT a.first_name,
+        SUM(b.total_order_cost)as daily_cost,
+        b.order_date
+FROM customers a
+JOIN orders b ON a.id = b.cust_id
+WHERE b.order_date between '2019-02-01' and '2019-05-01'
+GROUP BY 1,3
+ORDER BY 2 DESC
+LIMIT 1;
+```
 
 
 
