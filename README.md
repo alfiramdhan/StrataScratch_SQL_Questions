@@ -301,6 +301,8 @@ Output the user_id and their average session time.
 WITH CTE AS(
     SELECT user_id,
             DATE(timestamp)as date,
+            
+-- since we need lates page_load and earlist page_exit so we use MIN() and MAX() function
             MAX(CASE WHEN action = 'page_load' then timestamp end)as pg_load,
             MIN(CASE WHEN action = 'page_exit' then timestamp end)as pg_exit
     FROM facebook_web_log
@@ -312,6 +314,30 @@ WITH CTE AS(
     GROUP BY 1
     HAVING AVG(pg_exit - pg_load) IS NOT NULL;
 ```    
+
+### 📌 Meta/Facebook | Interview Questions | Customer Revenue In March
+[Question: ](https://platform.stratascratch.com/coding/9782-customer-revenue-in-march?code_type=1) Calculate the total revenue from each customer in March 2019. Include only customers who were active in March 2019.
+
+Output the revenue along with the customer id and sort the results based on the revenue in descending order.
+
+```sql
+SELECT cust_id,
+        SUM(total_order_cost)as total_revenue
+FROM orders
+WHERE DATE(order_date) BETWEEN '2019-03-01' and '2019-03-31'
+GROUP BY 1
+ORDER BY 2 DESC;
+```
+
+### 📌 Meta/Facebook | Interview Questions | Acceptance Rate By Date
+[Question: ](https://platform.stratascratch.com/coding/10285-acceptance-rate-by-date?code_type=1) What is the overall friend acceptance rate by date? Your output should have the rate of acceptances by the date the request was sent. Order by the earliest date to latest.
+
+Assume that each friend request starts by a user sending (i.e., user_id_sender) a friend request to another user (i.e., user_id_receiver) that's logged in the table with action = 'sent'. If the request is accepted, the table logs action = 'accepted'. If the request is not accepted, no record of action = 'accepted' is logged.
+
+```SQL
+
+```
+
 
 
 
