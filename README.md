@@ -278,9 +278,40 @@ order by year_rank asc
 limit 10;
 ```
 
+### 📌 Spotify | General Practice | Top Ranked Songs
+[Question: ](https://platform.stratascratch.com/coding/9991-top-ranked-songs?code_type=1) Find songs that have ranked in the top position.
 
+Output the track name and the number of times it ranked at the top. Sort your records by the number of times the song was in the top position in descending order.
 
+```sql
+SELECT trackname,
+        COUNT(position)as number_rank
+FROM spotify_worldwide_daily_song_ranking
+WHERE position = 1
+GROUP BY 1
+ORDER BY 2 DESC;
+```
 
+### 📌 Meta/Facebook | Interview Questions | Users By Average Session Time
+[Question: ](https://platform.stratascratch.com/coding/10352-users-by-avg-session-time?tabname=solutions&code_type=1) Calculate each user's average session time. A session is defined as the time difference between a page_load and page_exit. For simplicity, assume a user has only 1 session per day and if there are multiple of the same events on that day, consider only the latest page_load and earliest page_exit.
+
+Output the user_id and their average session time.
+
+```SQL
+WITH CTE AS(
+    SELECT user_id,
+            DATE(timestamp)as date,
+            MAX(CASE WHEN action = 'page_load' then timestamp end)as pg_load,
+            MIN(CASE WHEN action = 'page_exit' then timestamp end)as pg_exit
+    FROM facebook_web_log
+    GROUP BY 1,2
+)
+    SELECT user_id,
+            AVG(pg_exit - pg_load)as avg_session
+    FROM CTE
+    GROUP BY 1
+    HAVING AVG(pg_exit - pg_load) IS NOT NULL;
+```    
 
 
 
