@@ -208,45 +208,112 @@ ORDER BY 2 DESC
 LIMIT 1;
 ```
 
-### 📌 Yelp | General Practice | Top Businesses With Most Reviews
-[Question: ](https://platform.stratascratch.com/coding/10048-top-businesses-with-most-reviews?code_type=1) Find the top 5 businesses with most reviews. Assume that each row has a unique business_id such that the total reviews for each business is listed on each row.
-
-Output the business name along with the total number of reviews and order your results by the total reviews in descending order.
+### 📌 DoorDash | Interview Questions | Workers With The Highest Salaries
+[Question: ](https://platform.stratascratch.com/coding/10353-workers-with-the-highest-salaries?code_type=1) Find the titles of workers that earn the highest salary. Output the highest-paid title or multiple titles that share the highest salary.
 
 ```sql
-SELECT name,
-        review_count
-FROM yelp_business
-ORDER BY 2 DESC
-LIMIT 5;
+SELECT worker_title
+FROM worker a
+JOIN title b ON a.worker_id = b.worker_ref_id
+    WHERE salary = (SELECT MAX(salary) FROM worker);
 ```
 
-### 📌 Yelp | Interview Questions | Top Cool Votes
-[Question: ](https://platform.stratascratch.com/coding/10060-top-cool-votes?code_type=1) Find the review_text that received the highest number of  'cool' votes.
+### 📌 Meta/Facebook | Interview Questions | Users By Average Session Time
+[Question: ](https://platform.stratascratch.com/coding/10352-users-by-avg-session-time?tabname=solutions&code_type=1) Calculate each user's average session time. A session is defined as the time difference between a page_load and page_exit. For simplicity, assume a user has only 1 session per day and if there are multiple of the same events on that day, consider only the latest page_load and earliest page_exit.
 
-Output the business name along with the review text with the highest numbef of 'cool' votes.
+Output the user_id and their average session time.
+
+```SQL
+WITH CTE AS(
+    SELECT user_id,
+            DATE(timestamp)as date,
+            
+-- since we need lates page_load and earlist page_exit so we use MIN() and MAX() function
+            MAX(CASE WHEN action = 'page_load' then timestamp end)as pg_load,
+            MIN(CASE WHEN action = 'page_exit' then timestamp end)as pg_exit
+    FROM facebook_web_log
+    GROUP BY 1,2
+)
+    SELECT user_id,
+            AVG(pg_exit - pg_load)as avg_session
+    FROM CTE
+    GROUP BY 1
+    HAVING AVG(pg_exit - pg_load) IS NOT NULL;
+```    
+
+### 📌 Meta/Facebook | Interview Questions | Customer Revenue In March
+[Question: ](https://platform.stratascratch.com/coding/9782-customer-revenue-in-march?code_type=1) Calculate the total revenue from each customer in March 2019. Include only customers who were active in March 2019.
+
+Output the revenue along with the customer id and sort the results based on the revenue in descending order.
 
 ```sql
-SELECT business_name,
-        review_text
- FROM yelp_reviews        
-    WHERE cool = (SELECT MAX(cool)
-                    FROM yelp_reviews);
- ```
- 
- ### 📌 Yelp | Interview Questions | Reviews of Categories
- [Question: ](https://platform.stratascratch.com/coding/10049-reviews-of-categories?code_type=1) Find the top business categories based on the total number of reviews.
-
-Output the category along with the total number of reviews. Order by total reviews in descending order.
-
-Hint : Use unnest to split categories from a single cell
-
-```sql
-SELECT unnest(string_to_array(categories, ';')) AS category,
-        SUM(review_count)as total_reviews
-FROM yelp_business
+SELECT cust_id,
+        SUM(total_order_cost)as total_revenue
+FROM orders
+WHERE DATE(order_date) BETWEEN '2019-03-01' and '2019-03-31'
 GROUP BY 1
 ORDER BY 2 DESC;
+```
+
+### 📌 Meta/Facebook | Interview Questions | Highest Energy Consumption
+[Question: ](https://platform.stratascratch.com/coding/10064-highest-energy-consumption?code_type=1) Find the date with the highest total energy consumption from the Meta/Facebook data centers. Output the date along with the total energy consumption across all data centers.
+
+Hint :
+- Use UNION ALLs to combine all data in a list so that you don't lose any data
+- Use the SUM() function to find the total energy consumption by date
+- Find the max total energy consumption independent of date
+
+```sql
+WITH CTE AS(
+    SELECT *
+    FROM fb_eu_energy
+    UNION ALL
+    SELECT *
+    FROM fb_asia_energy
+    UNION ALL
+    SELECT *
+    FROM fb_na_energy
+),
+CTE_2 AS(
+    SELECT date,
+            SUM(consumption)as total_consumption
+    FROM CTE
+    GROUP BY 1
+    ORDER BY 2 DESC
+)
+    SELECT *
+    FROM CTE_2
+    WHERE total_consumption = (SELECT MAX(total_consumption)
+                                FROM CTE_2);
+```
+
+### 📌 Meta/Facebook | Interview Questions | Acceptance Rate By Date
+[Question: ](https://platform.stratascratch.com/coding/10285-acceptance-rate-by-date?code_type=1) What is the overall friend acceptance rate by date? Your output should have the rate of acceptances by the date the request was sent. Order by the earliest date to latest.
+
+Assume that each friend request starts by a user sending (i.e., user_id_sender) a friend request to another user (i.e., user_id_receiver) that's logged in the table with action = 'sent'. If the request is accepted, the table logs action = 'accepted'. If the request is not accepted, no record of action = 'accepted' is logged.
+
+```sql
+WITH CTE AS(
+    SELECT date,
+            action,
+            LEAD(action) OVER(PARTITION BY user_id_sender, user_id_receiver ORDER BY date)AS done
+    FROM fb_friend_requests
+)
+    SELECT date,
+            COUNT(done)::numeric /count(action) as acceptance_rate
+    FROM CTE        
+    WHERE action = 'sent'
+    GROUP BY 1;
+```
+
+### 📌 Meta/Facebook | General Practice | Find the rate of processed tickets for each type
+[Question: ](https://platform.stratascratch.com/coding/9781-find-the-rate-of-processed-tickets-for-each-type?tabname=question) Find the rate of processed tickets for each type.
+
+```SQL
+SELECT type,
+        SUM(CASE WHEN processed=True THEN 1 else 0 end)::numeric / COUNT(*)as rate_processed
+FROM facebook_complaints
+GROUP BY 1;
 ```
 
 ### 📌 Spotify | General Practice | Find the top 10 ranked songs in 2010
@@ -292,51 +359,50 @@ GROUP BY 1
 ORDER BY 2 DESC;
 ```
 
-### 📌 Meta/Facebook | Interview Questions | Users By Average Session Time
-[Question: ](https://platform.stratascratch.com/coding/10352-users-by-avg-session-time?tabname=solutions&code_type=1) Calculate each user's average session time. A session is defined as the time difference between a page_load and page_exit. For simplicity, assume a user has only 1 session per day and if there are multiple of the same events on that day, consider only the latest page_load and earliest page_exit.
+### 📌 Yelp | General Practice | Top Businesses With Most Reviews
+[Question: ](https://platform.stratascratch.com/coding/10048-top-businesses-with-most-reviews?code_type=1) Find the top 5 businesses with most reviews. Assume that each row has a unique business_id such that the total reviews for each business is listed on each row.
 
-Output the user_id and their average session time.
-
-```SQL
-WITH CTE AS(
-    SELECT user_id,
-            DATE(timestamp)as date,
-            
--- since we need lates page_load and earlist page_exit so we use MIN() and MAX() function
-            MAX(CASE WHEN action = 'page_load' then timestamp end)as pg_load,
-            MIN(CASE WHEN action = 'page_exit' then timestamp end)as pg_exit
-    FROM facebook_web_log
-    GROUP BY 1,2
-)
-    SELECT user_id,
-            AVG(pg_exit - pg_load)as avg_session
-    FROM CTE
-    GROUP BY 1
-    HAVING AVG(pg_exit - pg_load) IS NOT NULL;
-```    
-
-### 📌 Meta/Facebook | Interview Questions | Customer Revenue In March
-[Question: ](https://platform.stratascratch.com/coding/9782-customer-revenue-in-march?code_type=1) Calculate the total revenue from each customer in March 2019. Include only customers who were active in March 2019.
-
-Output the revenue along with the customer id and sort the results based on the revenue in descending order.
+Output the business name along with the total number of reviews and order your results by the total reviews in descending order.
 
 ```sql
-SELECT cust_id,
-        SUM(total_order_cost)as total_revenue
-FROM orders
-WHERE DATE(order_date) BETWEEN '2019-03-01' and '2019-03-31'
+SELECT name,
+        review_count
+FROM yelp_business
+ORDER BY 2 DESC
+LIMIT 5;
+```
+
+### 📌 Yelp | Interview Questions | Top Cool Votes
+[Question: ](https://platform.stratascratch.com/coding/10060-top-cool-votes?code_type=1) Find the review_text that received the highest number of  'cool' votes.
+
+Output the business name along with the review text with the highest numbef of 'cool' votes.
+
+```sql
+SELECT business_name,
+        review_text
+ FROM yelp_reviews        
+    WHERE cool = (SELECT MAX(cool)
+                    FROM yelp_reviews);
+ ```
+ 
+ ### 📌 Yelp | Interview Questions | Reviews of Categories
+ [Question: ](https://platform.stratascratch.com/coding/10049-reviews-of-categories?code_type=1) Find the top business categories based on the total number of reviews.
+
+Output the category along with the total number of reviews. Order by total reviews in descending order.
+
+Hint : Use unnest to split categories from a single cell
+
+```sql
+SELECT unnest(string_to_array(categories, ';')) AS category,
+        SUM(review_count)as total_reviews
+FROM yelp_business
 GROUP BY 1
 ORDER BY 2 DESC;
 ```
 
-### 📌 Meta/Facebook | Interview Questions | Acceptance Rate By Date
-[Question: ](https://platform.stratascratch.com/coding/10285-acceptance-rate-by-date?code_type=1) What is the overall friend acceptance rate by date? Your output should have the rate of acceptances by the date the request was sent. Order by the earliest date to latest.
+***
 
-Assume that each friend request starts by a user sending (i.e., user_id_sender) a friend request to another user (i.e., user_id_receiver) that's logged in the table with action = 'sent'. If the request is accepted, the table logs action = 'accepted'. If the request is not accepted, no record of action = 'accepted' is logged.
-
-```SQL
-
-```
+## Difficulty : Hard
 
 
 
