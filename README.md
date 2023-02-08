@@ -208,6 +208,89 @@ ORDER BY 2 DESC
 LIMIT 1;
 ```
 
+### 📌 Yelp | General Practice | Top Businesses With Most Reviews
+[Question: ](https://platform.stratascratch.com/coding/10048-top-businesses-with-most-reviews?code_type=1) Find the top 5 businesses with most reviews. Assume that each row has a unique business_id such that the total reviews for each business is listed on each row.
+
+Output the business name along with the total number of reviews and order your results by the total reviews in descending order.
+
+```sql
+SELECT name,
+        review_count
+FROM yelp_business
+ORDER BY 2 DESC
+LIMIT 5;
+```
+
+### 📌 Yelp | Interview Questions | Top Cool Votes
+[Question: ](https://platform.stratascratch.com/coding/10060-top-cool-votes?code_type=1) Find the review_text that received the highest number of  'cool' votes.
+
+Output the business name along with the review text with the highest numbef of 'cool' votes.
+
+```sql
+SELECT business_name,
+        review_text
+ FROM yelp_reviews        
+    WHERE cool = (SELECT MAX(cool)
+                    FROM yelp_reviews);
+ ```
+ 
+ ### 📌 Yelp | Interview Questions | Reviews of Categories
+ [Question: ](https://platform.stratascratch.com/coding/10049-reviews-of-categories?code_type=1) Find the top business categories based on the total number of reviews.
+
+Output the category along with the total number of reviews. Order by total reviews in descending order.
+
+Hint : Use unnest to split categories from a single cell
+
+```sql
+SELECT unnest(string_to_array(categories, ';')) AS category,
+        SUM(review_count)as total_reviews
+FROM yelp_business
+GROUP BY 1
+ORDER BY 2 DESC;
+```
+
+### 📌 Spotify | General Practice | Find the top 10 ranked songs in 2010
+[Question: ](https://platform.stratascratch.com/coding/9650-find-the-top-10-ranked-songs-in-2010?code_type=1) What were the top 10 ranked songs in 2010?
+
+Output the rank, group name, and song name but do not show the same song twice. Sort the result based on the year_rank in ascending order.
+
+```sql
+WITH CTE AS(    
+    SELECT DENSE_RANK() OVER(ORDER BY year_rank)as the_rank,
+            group_name,
+            song_name
+    FROM billboard_top_100_year_end
+    WHERE year in ('2010')
+)
+    SELECT DISTINCT the_rank,
+            group_name,
+            song_name
+    FROM CTE
+    WHERE the_rank <= 10
+    ORDER BY 1;
+    
+-- Method 2
+
+select distinct(year_rank) as rank ,group_name, song_name
+from billboard_top_100_year_end
+where year = 2010
+order by year_rank asc
+limit 10;
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
