@@ -445,8 +445,20 @@ GROUP BY 1
 
 The marketing campaign doesn't start until one day after the initial in-app purchase so users that only made one or multiple purchases on the first day do not count, nor do we count users that over time purchase only the products they purchased on the first day.
 
-```sql
+HINT :
+- First, find the first_purchase each customer using MIN() and OVER() function so we get list of first_date
+- Then find the first_purchase each customer each product using MIN() and OVER() function so we get first_date_product
 
+```sql
+WITH CTE AS(   
+    SELECT user_id,
+           MIN(created_at) OVER(PARTITION BY user_id)AS first_purchase,
+           MIN(created_at) OVER(PARTITION BY user_id, product_id)AS first_product_purchase
+    FROM marketing_campaign
+)
+    SELECT COUNT(DISTINCT user_id)as number_user
+    FROM CTE
+    WHERE first_purchase <> first_product_purchase;
 ```
 
 
