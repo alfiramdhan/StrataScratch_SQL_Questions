@@ -461,6 +461,30 @@ WITH CTE AS(
     WHERE first_purchase <> first_product_purchase;
 ```
 
+### 📌 Amazon | Interview Questions | Monthly Percentage Difference
+[Question: ](https://platform.stratascratch.com/coding/10319-monthly-percentage-difference?tabname=question) Given a table of purchases by date, calculate the month-over-month percentage change in revenue.
+
+The output should include the year-month date (YYYY-MM) and percentage change, rounded to the 2nd decimal point, and sorted from the beginning of the year to the end of the year.
+
+The percentage change column will be populated from the 2nd month forward and can be calculated as ((this month's revenue - last month's revenue) / last month's revenue)*100.
+
+HINT :
+- Extract year-month using the to_char() function and create a new column as with the year-month
+- Use the lag() function to get the previous month's revenue value then calculate the revenue difference between the current month and the previous month
+- Aggregate monthly revenue using GROUP BY and sum()
+- Calculate the difference in month-over-month revenue and use the round() function to round the revenue numbers to 2 decimal spots
+- Use a window function to perform the calculation on selected rows. You can define the window function in the GROUP BY clause and implement it in the revenue difference calculation in the SELECT clause.
+- Sort by date in ascending order
+
+```sql
+    SELECT to_char(created_at::date, 'YYYY-MM')as year_month,
+           ROUND((SUM(value) - LAG(SUM(VALUE),1) OVER(ORDER BY to_char(created_at, 'YYYY-MM'))) /
+           LAG(SUM(VALUE),1) OVER(ORDER BY to_char(created_at::date, 'YYYY-MM')) * 100, 2)AS monthly_pct
+    FROM sf_transactions
+    GROUP BY 1
+    ORDER BY 1;
+```
+
 
 
 
