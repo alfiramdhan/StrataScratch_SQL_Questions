@@ -485,6 +485,23 @@ HINT :
     ORDER BY 1;
 ```
 
+### 📌 Google | General Practice | Counting Instances in Text
+[Question: ](https://platform.stratascratch.com/coding/10319-monthly-percentage-difference?tabname=question) Find the number of times the words 'bull' and 'bear' occur in the contents. We're counting the number of times the words occur so words like 'bullish' should not be included in our count.
+
+Output the word 'bull' and 'bear' along with the corresponding number of occurrences.
+
+```sql
+SELECT 'bull' as sign,
+        count(*)as number_bull
+FROM google_file_store
+WHERE contents LIKE '% bull' or contents LIKE '% bull %' or contents LIKE 'bull %'
+UNION
+SELECT 'bear' as sign,
+        count(*)as number_bull
+FROM google_file_store
+WHERE contents LIKE '% bear' or contents LIKE '% bear %' or contents LIKE 'bear %';
+```
+
 
 
 
