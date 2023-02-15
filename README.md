@@ -230,19 +230,20 @@ HINT :
 - Once we get the new columns, then we can calculate average session time for each user
 
 ```SQL
-WITH CTE AS(
+WITH session_time AS(
     SELECT user_id,
             DATE(timestamp)as date,
             
--- since we need lates page_load and earlist page_exit so we use MIN() and MAX() function
-            MAX(CASE WHEN action = 'page_load' then timestamp end)as pg_load,
-            MIN(CASE WHEN action = 'page_exit' then timestamp end)as pg_exit
-    FROM facebook_web_log
+-- since we need to get session time per user before calculate avg, so we need to specify events
+            MAX(CASE WHEN action = 'page_load' THEN timestamp END)as pg_load,
+            MIN(CASE WHEN action = 'page_exit' THEN timestamp END)as pg_exit
+    FROM facebook_web_log        
     GROUP BY 1,2
-)
+)    
+    
     SELECT user_id,
             AVG(pg_exit - pg_load)as avg_session
-    FROM CTE
+    FROM session_time
     GROUP BY 1
     HAVING AVG(pg_exit - pg_load) IS NOT NULL;
 ```    
