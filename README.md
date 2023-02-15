@@ -92,11 +92,9 @@ GROUP BY 1;
 [Question: ](https://platform.stratascratch.com/coding/10128-count-the-number-of-movies-that-abigail-breslin-nominated-for-oscar?code_type=1) Count the number of movies that Abigail Breslin was nominated for an oscar.
 
 ```sql
-select nominee,
-       Count(movie)as number_movie
-from oscar_nominees
-where nominee LIKE 'Abigail Breslin'
-group by 1;
+SELECT Count(movie)as number_movie
+FROM oscar_nominees
+WHERE nominee LIKE 'Abigail Breslin';
 ```
 
 ### 📌 Spotify | General Practice | Find how many times each artist appeared on the Spotify ranking list
