@@ -222,6 +222,13 @@ ORDER BY 1 ASC;
 
 Output the user_id and their average session time.
 
+HINT :
+- We need to create subquery to calculate average session time, but first we need to specify events
+- Select from the table only events that are crucial for the analysis: page load and exit
+- Then create new columns pg_load and pg_exit using CASE WHEN ()
+- Since we need lates page_load and earlist page_exit so we use MIN() and MAX() function
+- Once we get the new columns, then we can calculate average session time for each user
+
 ```SQL
 WITH CTE AS(
     SELECT user_id,
