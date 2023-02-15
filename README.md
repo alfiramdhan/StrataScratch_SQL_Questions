@@ -502,12 +502,68 @@ FROM google_file_store
 WHERE contents LIKE '% bear' or contents LIKE '% bear %' or contents LIKE 'bear %';
 ```
 
+### 📌 Meta/Facebool | Interview Questions | Popularity Percentage
+[Question: ](https://platform.stratascratch.com/coding/10284-popularity-percentage?code_type=1) Find the popularity number for each user on Meta/Facebook. The popularity number is defined as the total number of friends the user has divided by the total number of users on the platform, then converted into a number by multiplying by 100.
+
+Output each user along with their popularity number. Order records in descending order by user id.
+
+The 'user1' and 'user2' column are pairs of friends.
+
+Hint :
+- We need to create subqueries or CTEs to calculate total number of friend per user
+- To calculate total number of friend per user, create one column that contains all users and a second column that contains all their friends. You can accomplish this by user1 union user2 columns.
+- Lastly, implement the percentage popularity formula by counting the number of friends per user and dividing by the total number of users on the platform.
 
 
+```sql
+with a as (
+    SELECT DISTINCT user1,
+            COUNT(*) as frnds
+    FROM facebook_friends
+    GROUP BY 1
+    ORDER BY 1
+),
+b as(
+    SELECT DISTINCT user2,
+            COUNT(*) as frnds
+    FROM facebook_friends
+    GROUP BY 1
+    ORDER BY 1
+),
+c as(
+    SELECT  * FROM a
+    UNION
+    SELECT  * FROM b
+)
+    SELECT user1,
+        (sum(frnds) :: float / count(1) over() :: float) *100 as popularity_percent
+    FROM c
+    GROUP BY user1
+    ORDER BY user1;
+```
 
+### 📌 Yelp | Interview Questions | Top 5 States With 5 Star Businesses
+[Question: ](https://platform.stratascratch.com/coding/10046-top-5-states-with-5-star-businesses?code_type=1) Find the top 5 states with the most 5 star businesses.
 
+Output the state name along with the number of 5-star businesses and order records by the number of 5-star businesses in descending order.
 
+In case there are ties in the number of businesses, return all the unique states. If two states have the same result, sort them in alphabetical order.
 
+```sql
+WITH CTE AS(    
+    SELECT DISTINCT state,
+            COUNT(stars)as number_5star,
+            RANK() OVER(ORDER BY COUNT(stars) desc)as ranking
+    FROM yelp_business
+    WHERE stars = 5
+    GROUP BY 1
+    ORDER BY 2 DESC, 1 ASC
+)
+    SELECT state,
+            number_5star
+    FROM CTE
+    WHERE ranking <=5;
+```
 
 
 
