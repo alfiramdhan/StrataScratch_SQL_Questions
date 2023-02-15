@@ -213,7 +213,8 @@ LIMIT 1;
 SELECT worker_title
 FROM worker a
 JOIN title b ON a.worker_id = b.worker_ref_id
-    WHERE salary = (SELECT MAX(salary) FROM worker);
+    WHERE salary = (SELECT MAX(salary) FROM worker)
+ORDER BY 1 ASC;
 ```
 
 ### 📌 Meta/Facebook | Interview Questions | Users By Average Session Time
