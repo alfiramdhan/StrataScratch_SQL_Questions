@@ -14,9 +14,9 @@ Here I will solve SQL questions and share my answers.
 
 ```sql
 SELECT event_name,
-        COUNT(user_id)as number_user
+        COUNT(*)as number_user
 FROM playbook_events
-WHERE device = 'macbook pro'
+WHERE device LIKE 'macbook pro'
 GROUP BY 1
 ORDER BY 2 desc;
 ```
