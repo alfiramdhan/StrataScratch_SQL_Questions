@@ -162,6 +162,7 @@ ORDER BY 3 DESC
 Output the nationality along with the number of apartments. Sort records by the apartments count in descending order.
 
 ```SQL
+-- METHOD 1 (more tricky)
 SELECT nationality,
         COUNT(DISTINCT unit_id)as number_apart
 FROM airbnb_hosts a
@@ -170,6 +171,27 @@ WHERE b.unit_type = 'Apartment'
     AND a.age < 30
 GROUP BY 1
 ORDER BY 2 DESC;
+
+
+-- METHOD 2 (more longer but details)
+WITH under_30 AS(
+    SELECT DISTINCT host_id,
+            nationality
+    FROM airbnb_hosts
+    WHERE age < 30
+),
+unit_apartment AS(
+    SELECT DISTINCT host_id,
+            unit_id
+    FROM airbnb_units
+    WHERE unit_type LIKE 'Apartment'
+)
+    SELECT a.nationality,
+            COUNT(b.unit_id)as number_apart
+    FROM under_30 a
+    JOIN unit_apartment b USING (host_id)
+    GROUP BY 1
+    ORDER BY 2 DESC;
 ```
 
 ### 📌 Amazon | Interview Questions | Finding User Purchases
