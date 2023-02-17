@@ -409,6 +409,22 @@ FROM facebook_complaints
 GROUP BY 1;
 ```
 
+### 📌 Salesforce | Interview Questions | Highest Target Under Manager
+[Question: ](https://platform.stratascratch.com/coding/9905-highest-target-under-manager?tabname=question) Find the highest target achieved by the employee or employees who works under the manager id 13. Output the first name of the employee and target achieved.
+
+The solution should show the highest target achieved under manager_id=13 and which employee(s) achieved it.
+
+```SQL
+SELECT first_name,
+        target
+FROM (SELECT first_name,
+                target,
+                DENSE_RANK() OVER(ORDER BY target DESC)AS ranking
+        FROM salesforce_employees
+        WHERE manager_id = 13)a
+WHERE ranking = 1;
+```
+
 ### 📌 Spotify | General Practice | Find the top 10 ranked songs in 2010
 [Question: ](https://platform.stratascratch.com/coding/9650-find-the-top-10-ranked-songs-in-2010?code_type=1) What were the top 10 ranked songs in 2010?
 
