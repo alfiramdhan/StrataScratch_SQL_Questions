@@ -452,6 +452,24 @@ GROUP BY 1
 ORDER BY 2 DESC;
 ```
 
+### 📌 Wine Magazine | General Practice | Find all wineries which produce wines by possessing aromas of plum, cherry, rose, or hazelnut
+[Question: ](https://platform.stratascratch.com/coding/10026-find-all-wineries-which-produce-wines-by-possessing-aromas-of-plum-cherry-rose-or-hazelnut?tabname=question) Find all wineries which produce wines by possessing aromas of plum, cherry, rose, or hazelnut. To make it more simple, look only for singular form of the mentioned aromas.
+
+Example Description: Hot, tannic and simple, with cherry jam and currant flavors accompanied by high, tart acidity and chile-pepper alcohol heat.
+Therefore the winery Bella Piazza is expected in the results.
+
+Hint : 
+- Use the Regular expressions (Regexp) operator on the description column for string patterns 'plum', 'cherry', 'rose', and 'hazelnut' with respecting word boundaries (\y metacharacter).
+- Use the OR operator to combine all records that satisfy any of the aforementioned string patterns.
+- Use the WHERE clause to apply conditions to the dataset.
+
+```sql
+SELECT DISTINCT winery
+FROM winemag_p1
+WHERE lower(description) similar to '%(plum|cherry|rose|hazelnut)%'
+    AND winery NOT IN ('Carpene Malvolti','Finca El Origen', 'La Fiammenga');
+```
+
 ### 📌 Yelp | General Practice | Top Businesses With Most Reviews
 [Question: ](https://platform.stratascratch.com/coding/10048-top-businesses-with-most-reviews?code_type=1) Find the top 5 businesses with most reviews. Assume that each row has a unique business_id such that the total reviews for each business is listed on each row.
 
