@@ -144,6 +144,23 @@ FROM oscar_nominees
 WHERE nominee LIKE 'Abigail Breslin';
 ```
 
+### 📌 Salesforce | Interview Questions | Average Salaries
+[Question: ](https://platform.stratascratch.com/coding/9917-average-salaries?code_type=1) Compare each employee's salary with the average salary of the corresponding department.
+
+Output the department, first name, and salary of employees along with the average salary of that department.
+
+Hint : Using OVER() function to get the average salary of that department
+
+```sql
+SELECT department,
+        first_name,
+        salary,
+        AVG(salary) OVER(PARTITION BY department)as average_salary
+FROM employee
+GROUP BY 1,2,3
+ORDER BY 1,3;
+```
+
 ### 📌 Spotify | General Practice | Find how many times each artist appeared on the Spotify ranking list
 [Question: ](https://platform.stratascratch.com/coding/9992-find-artists-that-have-been-on-spotify-the-most-number-of-times?code_type=1) Find how many times each artist appeared on the Spotify ranking list.
 
