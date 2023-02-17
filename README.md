@@ -116,6 +116,25 @@ JOIN facebook_hack_survey b ON a.id = b.employee_id
 GROUP BY 1;
 ```
 
+### 📌 Microsoft | Interview Questions | Finding Updated Records
+[Question: ](https://platform.stratascratch.com/coding/10299-finding-updated-records?code_type=1) We have a table with employees and their salaries, however, some of the records are old and contain outdated salary information. Find the current salary of each employee assuming that salaries increase each year.
+
+Output their id, first name, last name, department ID, and current salary. Order your list by employee ID in ascending order.
+
+Hint : using Max() function to get current salary, assuming that salaries increase each year
+
+```sql
+SELECT id,
+        first_name,
+        last_name,
+        department_id,
+        MAX(salary)as current_salary
+FROM ms_employee_salary
+GROUP BY 1,2,3,4
+ORDER BY 1;
+```
+
+
 ### 📌 Netflix | General Practice | Count the number of movies that Abigail Breslin nominated for oscar
 [Question: ](https://platform.stratascratch.com/coding/10128-count-the-number-of-movies-that-abigail-breslin-nominated-for-oscar?code_type=1) Count the number of movies that Abigail Breslin was nominated for an oscar.
 
