@@ -64,6 +64,34 @@ LEFT JOIN orders b ON a.id = b.cust_id
 ORDER BY 1, 4 ASC;
 ```
 
+### 📌 Dropbox | Interview Questions | Salaries Differences
+[Question: ](https://platform.stratascratch.com/coding/10308-salaries-differences?tabname=question) Write a query that calculates the difference between the highest salaries found in the marketing and engineering departments. Output just the absolute difference in salaries.
+
+```sql
+-- Method 1 : create CTE
+WITH marketing AS(
+    SELECT MAX(salary)as marketing_salary
+    FROM db_employee a
+    JOIN db_dept b ON a.department_id = b.id
+    WHERE b.department LIKE 'marketing'
+),
+engineering AS(
+    SELECT MAX(salary)as engineering_salary
+    FROM db_employee a
+    JOIN db_dept b ON a.department_id = b.id
+    WHERE b.department LIKE 'engineering'
+)
+    SELECT marketing_salary - engineering_salary
+    FROM marketing, engineering;
+    
+-- Method 2 : using abs() function
+SELECT ABS(MAX(salary) FILTER (WHERE department = 'marketing') - MAX(salary) FILTER (WHERE department = 'engineering')) 
+FROM db_employee a
+LEFT JOIN db_dept b ON a.department_id = b.id;
+
+```
+
+
 ### 📌 Meta/Facebook | General Practice | Find all posts which were reacted to with a heart
 [Question: ](https://platform.stratascratch.com/coding/10087-find-all-posts-which-were-reacted-to-with-a-heart?code_type=1) Find all posts which were reacted to with a heart. For such posts output all columns from facebook_posts table.
 
