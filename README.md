@@ -622,7 +622,7 @@ WITH CTE AS(
     WHERE first_purchase <> first_product_purchase;
 ```
 
-### 📌 Amazon | Interview Questions | Monthly Percentage Difference
+### 📌 Amazon | Interview Questions | Monthly Percentage Difference (Monthly Growth)
 [Question: ](https://platform.stratascratch.com/coding/10319-monthly-percentage-difference?tabname=question) Given a table of purchases by date, calculate the month-over-month percentage change in revenue.
 
 The output should include the year-month date (YYYY-MM) and percentage change, rounded to the 2nd decimal point, and sorted from the beginning of the year to the end of the year.
