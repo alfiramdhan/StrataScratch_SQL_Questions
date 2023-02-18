@@ -303,6 +303,20 @@ JOIN title b ON a.worker_id = b.worker_ref_id
 ORDER BY 1 ASC;
 ```
 
+### 📌 Dropbox | Interview Questions | Employee and Manager Salaries
+[Question: ](https://platform.stratascratch.com/coding/9894-employee-and-manager-salaries?tabname=question) Find employees who are earning more than their managers. Output the employee's first name along with the corresponding salary.
+
+Hint :
+- using Left Join with foreign key e.manager_id = m.id and e.salary > m.salary
+
+```sql
+SELECT e.first_name,
+        e.salary
+FROM employee e
+LEFT JOIN employee m ON e.manager_id = m.id
+WHERE e.salary > m.salary;
+```
+
 ### 📌 Meta/Facebook | Interview Questions | Users By Average Session Time
 [Question: ](https://platform.stratascratch.com/coding/10352-users-by-avg-session-time?tabname=solutions&code_type=1) Calculate each user's average session time. A session is defined as the time difference between a page_load and page_exit. For simplicity, assume a user has only 1 session per day and if there are multiple of the same events on that day, consider only the latest page_load and earliest page_exit.
 
