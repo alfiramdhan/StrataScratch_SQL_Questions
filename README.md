@@ -292,6 +292,26 @@ ORDER BY 2 DESC
 LIMIT 1;
 ```
 
+### 📌 City of San Francisco | Interview Questions | Classify Business Type
+[Question: ](https://platform.stratascratch.com/coding/9726-classify-business-type?tabname=question) Classify each business as either a restaurant, cafe, school, or other.
+
+•	A restaurant should have the word 'restaurant' in the business name.
+•	A cafe should have either 'cafe', 'café', or 'coffee' in the business name.
+•	A school should have the word 'school' in the business name.
+•	All other businesses should be classified as 'other'.
+
+Output the business name and their classification.
+
+```sql
+SELECT DISTINCT business_name,
+        CASE WHEN lower(business_name) LIKE '%restaurant%' THEN 'restaurant'
+            WHEN lower(business_name) similar to '%(cafe|café|coffee)%' THEN 'cafe'
+            WHEN lower(business_name) LIKE '%school%' THEN 'school'
+            ELSE 'other'
+        END AS business_type    
+FROM sf_restaurant_health_violations;
+```
+
 ### 📌 DoorDash | Interview Questions | Workers With The Highest Salaries
 [Question: ](https://platform.stratascratch.com/coding/10353-workers-with-the-highest-salaries?code_type=1) Find the titles of workers that earn the highest salary. Output the highest-paid title or multiple titles that share the highest salary.
 
