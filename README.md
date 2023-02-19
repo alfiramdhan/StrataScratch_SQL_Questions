@@ -663,7 +663,7 @@ FROM google_file_store
 WHERE contents LIKE '% bear' or contents LIKE '% bear %' or contents LIKE 'bear %';
 ```
 
-### 📌 Meta/Facebool | Interview Questions | Popularity Percentage
+### 📌 Meta/Facebook | Interview Questions | Popularity Percentage
 [Question: ](https://platform.stratascratch.com/coding/10284-popularity-percentage?code_type=1) Find the popularity number for each user on Meta/Facebook. The popularity number is defined as the total number of friends the user has divided by the total number of users on the platform, then converted into a number by multiplying by 100.
 
 Output each user along with their popularity number. Order records in descending order by user id.
@@ -701,6 +701,23 @@ c as(
     FROM c
     GROUP BY user1
     ORDER BY user1;
+```
+
+### 📌 Microsoft | Interview Questions | Premium vs Freemium
+[Question: ](https://platform.stratascratch.com/coding/10300-premium-vs-freemium?code_type=1) Find the total number of downloads for paying and non-paying users by date. Include only records where non-paying customers have more downloads than paying customers.
+
+The output should be sorted by earliest date first and contain 3 columns date, non-paying downloads, paying downloads.
+
+```sql
+SELECT a.date,
+        SUM(CASE WHEN c.paying_customer = 'no' THEN a.downloads END)as non_paying,
+        SUM(CASE WHEN c.paying_customer = 'yes' THEN a.downloads END)as paying
+FROM ms_download_facts a        
+JOIN ms_user_dimension b ON a.user_id = b.user_id
+JOIN ms_acc_dimension c ON b.acc_id = c.acc_id
+GROUP BY 1
+HAVING SUM(CASE WHEN c.paying_customer = 'no' THEN a.downloads END) > SUM(CASE WHEN c.paying_customer = 'yes' THEN a.downloads END)
+    ORDER BY 1;
 ```
 
 ### 📌 Yelp | Interview Questions | Top 5 States With 5 Star Businesses
