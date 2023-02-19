@@ -677,30 +677,35 @@ Hint :
 
 
 ```sql
-with a as (
-    SELECT DISTINCT user1,
-            COUNT(*) as frnds
+-- popularity_pct for each user
+-- popularity_pct as (total_friends / number_user)*100
+
+WITH cte1 AS(
+    SELECT user1,
+            COUNT(*)as friend
     FROM facebook_friends
     GROUP BY 1
     ORDER BY 1
 ),
-b as(
-    SELECT DISTINCT user2,
-            COUNT(*) as frnds
+cte2 AS(    
+    SELECT user2 AS user1,
+            COUNT(*)as friend
     FROM facebook_friends
     GROUP BY 1
     ORDER BY 1
 ),
-c as(
-    SELECT  * FROM a
+users AS(
+    SELECT *
+    FROM cte1
     UNION
-    SELECT  * FROM b
+    SELECT *
+    FROM cte2
 )
     SELECT user1,
-        (sum(frnds) :: float / count(1) over() :: float) *100 as popularity_percent
-    FROM c
-    GROUP BY user1
-    ORDER BY user1;
+            (SUM(friend)::FLOAT * 100 / COUNT(user1) OVER())::FLOAT as popularity_pct
+    FROM users  
+    GROUP BY 1
+    ORDER BY 1;
 ```
 
 ### 📌 Microsoft | Interview Questions | Premium vs Freemium
